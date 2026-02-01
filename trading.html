@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Signal Sender</title>
+    <style>
+        :root {
+            --bg: #131722;
+            --card: #1e222d;
+            --green: #00c076;
+            --red: #ff3a33;
+            --blue: #2962ff;
+            --text: #d1d4dc;
+        }
+        body { font-family: 'Trebuchet MS', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+        .container { max-width: 500px; margin: auto; background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #363c4e; }
+        h2 { color: white; text-align: center; margin-bottom: 25px; }
+        
+        label { display: block; margin-top: 15px; font-size: 0.85rem; color: #848e9c; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; background: #2a2e39; border: 1px solid #434651; color: white; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        
+        .preview-box { background: #131722; padding: 15px; border-radius: 8px; margin-top: 25px; border: 1px dashed #434651; white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; color: #00ffcc; }
+        
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        button { padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
+        .btn-ws { background: #25d366; } /* Color WhatsApp */
+        .btn-tg { background: #0088cc; } /* Color Telegram */
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🚀 LH Signal Generator</h2>
+    
+    <label>PAR / ASSET</label>
+    <input type="text" id="pair" placeholder="ej: BTC/USDT" oninput="updatePreview()">
+
+    <label>TIPO DE OPERACIÓN</label>
+    <select id="type" onchange="updatePreview()">
+        <option value="🟢 LONG / COMPRA">🟢 LONG (BUY)</option>
+        <option value="🔴 SHORT / VENTA">🔴 SHORT (SELL)</option>
+    </select>
+
+    <label>ENTRADA (ENTRY PRICE)</label>
+    <input type="text" id="entry" placeholder="ej: 65200" oninput="updatePreview()">
+
+    <label>STOP LOSS ❌</label>
+    <input type="text" id="sl" placeholder="ej: 64000" oninput="updatePreview()">
+
+    <label>TAKE PROFIT 🎯</label>
+    <input type="text" id="tp" placeholder="ej: 68000" oninput="updatePreview()">
+
+    <div class="preview-box" id="preview">Esperando datos...</div>
+
+    <div class="btn-group">
+        <button class="btn-ws" onclick="sendWhatsApp()">WhatsApp</button>
+        <button class="btn-tg" onclick="sendTelegram()">Telegram</button>
+    </div>
+</div>
+
+<script>
+    function getMessage() {
+        const pair = document.getElementById('pair').value || "---";
+        const type = document.getElementById('type').value;
+        const entry = document.getElementById('entry').value || "---";
+        const sl = document.getElementById('sl').value || "---";
+        const tp = document.getElementById('tp').value || "---";
+
+        return `📊 *NUEVA SEÑAL DE TRADING* 📊\n\n` +
+               `🔸 *Par:* ${pair.toUpperCase()}\n` +
+               `🔸 *Acción:* ${type}\n\n` +
+               `📥 *Entrada:* ${entry}\n` +
+               `🎯 *Take Profit:* ${tp}\n` +
+               `❌ *Stop Loss:* ${sl}\n\n` +
+               `⚠️ _Gestiona tu riesgo adecuadamente._`;
+    }
+
+    function updatePreview() {
+        document.getElementById('preview').innerText = getMessage();
+    }
+
+    function sendWhatsApp() {
+        const msg = encodeURIComponent(getMessage());
+        window.open(`https://wa.me/?text=${msg}`, '_blank');
+    }
+
+    function sendTelegram() {
+        const msg = encodeURIComponent(getMessage());
+        window.open(`https://t.me/share/url?url=&text=${msg}`, '_blank');
+    }
+
+    // Inicializar vista previa
+    updatePreview();
+</script>
+
+</body>
+</html>
